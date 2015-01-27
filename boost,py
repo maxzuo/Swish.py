@@ -1,0 +1,230 @@
+import simplegui, random
+
+class boostCharacter:
+    def __init__(self, radius, color, pos):
+        self.radius = radius
+        self.color = color
+        self.pos = pos
+    
+def update():
+    global boost1, boost2, boost3, CIRCLE_RADIUS, CIRCLE_POS
+    global HEIGHT
+    if CIRCLE_RADIUS + CIRCLE_POS[1] <= CIRCLE_RADIUS / 2:
+        CIRCLE_POS[1] = HEIGHT - CIRCLE_RADIUS / 2 - 1
+    if CIRCLE_POS[1] - CIRCLE_RADIUS >= HEIGHT - CIRCLE_RADIUS / 2:
+        CIRCLE_POS[1] = CIRCLE_RADIUS / 2 + 1
+    if boost1.pos[0] <= 0:
+        boost1.pos = [WIDTH, random.randint(20, 1 + HEIGHT - 20)]
+        boost1.color = color(0)
+        boost1.radius = random.randrange(5, 30)
+    if boost2.pos[0] <= 0:
+        boost2.pos = [WIDTH, random.randint(20, 1 + HEIGHT - 20)]
+        boost2.color = color(0)
+        boost2.radius = random.randrange(5, 30)
+    if boost3.pos[0] <= 0:
+        boost3.pos = [WIDTH, random.randint(20, 1 + HEIGHT - 20)]
+        boost3.color = color(0)
+        boost3.radius = random.randrange(5, 30)
+    if boost4.pos[0] <= 0:
+        boost4.pos = [WIDTH, random.randint(20, 1 + HEIGHT - 20)]
+        boost4.color = color(0)
+        boost4.radius = random.randrange(5, 30)
+    
+def color(r):
+    r = random.randint(1, 6)
+    if r == 1:
+        r = "PaleVioletRed"
+    if r == 2:
+        r = "Tomato"
+    if r == 3:
+        r = "Yellow"
+    if r == 4:
+        r = "GreenYellow"
+    if r == 5:
+        r = "Turquoise"
+    if r == 6:
+        r = "Magenta"
+    return r
+
+SCORE = 0
+STATUS = ""
+LEVEL = None
+t = 0
+HEIGHT = 400
+WIDTH = 1000
+CIRCLE_RADIUS = 24
+CIRCLE_POS = [WIDTH / 4, HEIGHT / 2]
+CIRCLE_VELOCITY = [0, 0]
+BOOST_VELOCITY = -8
+
+boost1 = boostCharacter(random.randrange(5, 30), color(0), [random.randint(WIDTH / 3, WIDTH - 20),
+                                                            random.randint(20, 1 + HEIGHT - 20)]) #perhaps change this to a random.randrange
+boost2 = boostCharacter(random.randrange(5, 30), color(0), [random.randint(WIDTH / 5, WIDTH),
+                                                            random.randint(20, 1 + HEIGHT - 20)])
+boost3 = boostCharacter(random.randrange(5, 30), color(0), [random.randint(WIDTH / 3, WIDTH - 20),
+                                                            random.randint(20, 1 + HEIGHT - 20)])
+boost4 = boostCharacter(random.randrange(5, 30), color(0), [random.randint(WIDTH/5, WIDTH),
+                                                            random.randint(20, 1 + HEIGHT - 20)])
+def reloadBoost():
+    global boost1, boost2, boost3, boost4
+    if LEVEL != None:
+        boost1.radius = random.randrange(5, 30)
+        boost1.color = color(0)
+        boost1.pos = [random.randint(WIDTH/5, WIDTH), random.randint(20, 1 + HEIGHT - 20)]
+    
+        boost2.radius = random.randrange(5, 30)
+        boost2.color = color(0)
+        boost2.pos = [random.randint(WIDTH/5, WIDTH), random.randint(20, 1 + HEIGHT - 20)]
+    
+        boost3.radius = random.randrange(5, 30)
+        boost3.color = color(0)
+        boost3.pos = [random.randint(WIDTH/5, WIDTH), random.randint(20, 1 + HEIGHT - 20)]
+    
+        boost4.radius = random.randrange(5, 30)
+        boost4.color = color(0)
+        boost4.pos = [random.randint(WIDTH/5, WIDTH), random.randint(20, 1 + HEIGHT - 20)]
+
+def time():
+    global t, BOOST_VELOCITY, SCORE
+    t += 1
+    if LEVEL == 0:
+        BOOST_VELOCITY += 0.13
+    elif LEVEL == 1:
+        BOOST_VELOCITY += 0.22
+    elif LEVEL == 2:
+        BOOST_VELOCITY += 0.265
+    elif LEVEL == 3:
+        BOOST_VELOCITY += 0.28
+    elif LEVEL == 4:
+        BOOST_VELOCITY += 0.3
+    
+    if LEVEL != None:
+        SCORE += (LEVEL + 1) * (-BOOST_VELOCITY) / 5
+
+def contact():
+    global CIRCLE_POS, CIRCLE_RADIUS, boost1, boost2, boost3, BOOST_VELOCITY
+    
+    if LEVEL == None:
+        pass
+    else:
+        if boost1.pos[1] - boost1.radius - CIRCLE_RADIUS - 3 <= CIRCLE_POS[1] + CIRCLE_RADIUS and boost1.pos[1] + boost1.radius + CIRCLE_RADIUS + 3 >= CIRCLE_POS[1] - CIRCLE_RADIUS:
+            if boost1.pos[0] >= 250 - boost1.radius and boost1.pos[0] <= 250 + boost1.radius:
+                BOOST_VELOCITY = -8
+        if boost2.pos[1] - boost2.radius - CIRCLE_RADIUS - 3 <= CIRCLE_POS[1] + CIRCLE_RADIUS and boost2.pos[1] + boost2.radius + CIRCLE_RADIUS + 3 >= CIRCLE_POS[1] - CIRCLE_RADIUS:
+            if boost2.pos[0] >= 250 - boost2.radius and boost2.pos[0] <= 250 + boost2.radius:
+                BOOST_VELOCITY = -8
+        if boost3.pos[1] - boost3.radius - CIRCLE_RADIUS - 3 <= CIRCLE_POS[1] + CIRCLE_RADIUS and boost3.pos[1] + boost3.radius + CIRCLE_RADIUS + 3 >= CIRCLE_POS[1] - CIRCLE_RADIUS:
+            if boost3.pos[0] >= 250 - boost3.radius and boost3.pos[0] <= 250 + boost3.radius:
+                BOOST_VELOCITY = -8
+        if boost4.pos[1] - boost4.radius - CIRCLE_RADIUS - 3 <= CIRCLE_POS[1] + CIRCLE_RADIUS and boost4.pos[1] + boost4.radius + CIRCLE_RADIUS + 3 >= CIRCLE_POS[1] - CIRCLE_RADIUS:
+            if boost4.pos[0] >= 250 - boost4.radius and boost4.pos[0] <= 250 + boost4.radius:
+                BOOST_VELOCITY = -8
+
+def checkStatus():
+    global STATUS, t, SCORE, LEVEL, increment
+    if BOOST_VELOCITY > 0:
+        STATUS = "GAME OVER"
+        LEVEL = None
+    else:
+        STATUS = ""
+        
+
+def superEasyLevel():
+    global LEVEL, SCORE, BOOST_VELOCITY, STATUS
+    if STATUS == "GAME OVER" or SCORE != 0:
+        reloadBoost()
+    LEVEL = 0
+    SCORE = 0
+    BOOST_VELOCITY = -8
+    STATUS = ''
+    
+def easyLevel():
+    global LEVEL, SCORE, BOOST_VELOCITY, STATUS
+    if STATUS == "GAME OVER" or SCORE != 0:
+        reloadBoost()
+    LEVEL = 1
+    SCORE = 0
+    BOOST_VELOCITY = -8
+    STATUS = ''
+    
+def normalLevel():
+    global LEVEL, SCORE, BOOST_VELOCITY, STATUS
+    LEVEL = 2
+    SCORE = 0
+    BOOST_VELOCITY = -8
+    if STATUS == "GAME OVER" or SCORE != 0:
+        reloadBoost()
+    STATUS = ''
+
+def hardLevel():
+    global LEVEL, SCORE, BOOST_VELOCITY, STATUS
+    if STATUS == "GAME OVER" or SCORE != 0:
+        reloadBoost()
+    LEVEL = 3
+    SCORE = 0
+    BOOST_VELOCITY = -8
+    STATUS = ''
+    
+def expertLevel():
+    global LEVEL, SCORE, BOOST_VELOCITY, STATUS
+    if STATUS == "GAME OVER" or SCORE != 0:
+        reloadBoost()
+    LEVEL = 4
+    SCORE = 0
+    BOOST_VELOCITY = -8
+    STATUS = ''
+
+def keyDown(key):
+    global CIRCLE_VELOCITY, HEIGHT, CIRCLE_POS
+    if LEVEL != None:
+        if key == simplegui.KEY_MAP["up"]:
+            CIRCLE_VELOCITY[1] = -4
+        if key == simplegui.KEY_MAP["down"]:
+            CIRCLE_VELOCITY[1] = 4
+    else:
+        CIRCLE_POS[1] = HEIGHT / 2
+
+def keyUp(key):
+    global CIRCLE_VELOCITY
+    CIRCLE_VELOCITY = [0, 0]
+
+def draw(canvas):
+    global CIRCLE_POS, CIRCLE_VELOCITY, LEVEL
+    global CIRCLE_RADIUS, HEIGHT, SCORE
+    global boost1, boost2, boost3, boost4
+    if LEVEL != None:
+        boost1.pos[0] += BOOST_VELOCITY - 0.4
+        boost2.pos[0] += BOOST_VELOCITY - 0.5
+        boost3.pos[0] += BOOST_VELOCITY - 0.2
+        boost4.pos[0] += BOOST_VELOCITY - 1
+    else:
+        CIRCLE_POS[1] = HEIGHT / 2
+    CIRCLE_POS[0] += CIRCLE_VELOCITY[0]
+    CIRCLE_POS[1] += CIRCLE_VELOCITY[1]
+    update(), contact(), checkStatus()
+
+    canvas.draw_text("Score: " + str(int(SCORE)), [4, 26], 24, "White")
+    canvas.draw_text(STATUS, [WIDTH / 2 - 100, 50], 36, "White")
+    
+    canvas.draw_circle(CIRCLE_POS, CIRCLE_RADIUS, 1, "White")
+    if LEVEL != None:
+        canvas.draw_circle(boost1.pos, boost1.radius, 2, boost1.color)
+        canvas.draw_circle(boost2.pos, boost2.radius, 2, boost2.color)
+        canvas.draw_circle(boost3.pos, boost3.radius, 2, boost3.color)
+        canvas.draw_circle(boost4.pos, boost4.radius, 2, boost4.color)
+
+
+timer = simplegui.create_timer(100, time)
+frame = simplegui.create_frame("Swish", WIDTH, HEIGHT)
+
+frame.set_draw_handler(draw)
+frame.set_keydown_handler(keyDown)
+frame.set_keyup_handler(keyUp)
+frame.add_button("Super Easy", superEasyLevel, 110)
+frame.add_button("Easy", easyLevel, 110)
+frame.add_button("Normal", normalLevel, 110)
+frame.add_button("Hard", hardLevel, 110)
+frame.add_button("Expert", expertLevel, 110)
+
+frame.start()
+timer.start()
